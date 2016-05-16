@@ -1,0 +1,616 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="DBManaModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="MANA_ActivityLog">
+          <Key>
+            <PropertyRef Name="PK" />
+          </Key>
+          <Property Name="PK" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ActivityStatus" Type="nvarchar" MaxLength="64" Nullable="false" />
+          <Property Name="ActivityName" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="StartTime" Type="datetime2" Precision="7" Nullable="false" />
+          <Property Name="EndTime" Type="datetime2" Precision="7" Nullable="false" />
+          <Property Name="FK_ExecutedBy" Type="int" />
+          <Property Name="FK_ControledBy" Type="int" />
+          <Property Name="FK_TaskLog" Type="int" Nullable="false" />
+          <Property Name="FK_WFInstanceID" Type="uniqueidentifier" />
+          <Property Name="ActivityID" Type="nvarchar" MaxLength="64" Nullable="false" />
+        </EntityType>
+        <EntityType Name="MANA_Dossier">
+          <Key>
+            <PropertyRef Name="PK" />
+          </Key>
+          <Property Name="PK" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="100" />
+          <Property Name="Status" Type="nvarchar" MaxLength="64" />
+          <Property Name="OpenDate" Type="datetime" />
+          <Property Name="CloseDate" Type="datetime" />
+          <Property Name="FK_WFInstanceLog" Type="int" />
+        </EntityType>
+        <EntityType Name="MANA_User">
+          <Key>
+            <PropertyRef Name="PK" />
+          </Key>
+          <Property Name="PK" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="UserID" Type="nvarchar" MaxLength="64" Nullable="false" />
+        </EntityType>
+        <EntityType Name="MANA_WFInstancesLog">
+          <Key>
+            <PropertyRef Name="PK" />
+          </Key>
+          <Property Name="PK" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FK_TaskRepo" Type="int" />
+          <Property Name="FK_UserExec" Type="int" />
+          <Property Name="Status" Type="nvarchar" MaxLength="64" Nullable="false" />
+          <Property Name="StartTime" Type="datetime2" Precision="7" Nullable="false" />
+          <Property Name="EndTime" Type="datetime2" Precision="7" Nullable="false" />
+          <Property Name="FK_UserCtrl" Type="int" />
+          <Property Name="FK_WFInstanceID" Type="uniqueidentifier" />
+          <Property Name="Topic" Type="nvarchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="MANA_WorkflowRepository">
+          <Key>
+            <PropertyRef Name="PK" />
+          </Key>
+          <Property Name="PK" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" MaxLength="1024" />
+          <Property Name="ValidityStartDate" Type="datetime" Nullable="false" />
+          <Property Name="ValidityEndDate" Type="datetime" Nullable="false" />
+          <Property Name="WorkFlow" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Area" Type="nvarchar" MaxLength="128" />
+          <Property Name="Function" Type="nvarchar" MaxLength="128" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'DBMana.System.Activities.DurableInstancing.InstancesTable' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="InstancesTable">
+          <Key>
+            <PropertyRef Name="Id" />
+            <PropertyRef Name="SurrogateInstanceId" />
+            <PropertyRef Name="Version" />
+            <PropertyRef Name="CreationTime" />
+            <PropertyRef Name="SurrogateIdentityId" />
+          </Key>
+          <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="SurrogateInstanceId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="SurrogateLockOwnerId" Type="bigint" />
+          <Property Name="PrimitiveDataProperties" Type="varbinary(max)" />
+          <Property Name="ComplexDataProperties" Type="varbinary(max)" />
+          <Property Name="WriteOnlyPrimitiveDataProperties" Type="varbinary(max)" />
+          <Property Name="WriteOnlyComplexDataProperties" Type="varbinary(max)" />
+          <Property Name="MetadataProperties" Type="varbinary(max)" />
+          <Property Name="DataEncodingOption" Type="tinyint" />
+          <Property Name="MetadataEncodingOption" Type="tinyint" />
+          <Property Name="Version" Type="bigint" Nullable="false" />
+          <Property Name="PendingTimer" Type="datetime" />
+          <Property Name="CreationTime" Type="datetime" Nullable="false" />
+          <Property Name="LastUpdated" Type="datetime" />
+          <Property Name="WorkflowHostType" Type="uniqueidentifier" />
+          <Property Name="ServiceDeploymentId" Type="bigint" />
+          <Property Name="SuspensionExceptionName" Type="nvarchar" MaxLength="450" />
+          <Property Name="SuspensionReason" Type="nvarchar(max)" />
+          <Property Name="BlockingBookmarks" Type="nvarchar(max)" />
+          <Property Name="LastMachineRunOn" Type="nvarchar" MaxLength="450" />
+          <Property Name="ExecutionStatus" Type="nvarchar" MaxLength="450" />
+          <Property Name="IsInitialized" Type="bit" />
+          <Property Name="IsSuspended" Type="bit" />
+          <Property Name="IsReadyToRun" Type="bit" />
+          <Property Name="IsCompleted" Type="bit" />
+          <Property Name="SurrogateIdentityId" Type="bigint" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_TaskLogActivityLog">
+          <End Role="MANA_WFInstancesLog" Type="Self.MANA_WFInstancesLog" Multiplicity="1" />
+          <End Role="MANA_ActivityLog" Type="Self.MANA_ActivityLog" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MANA_WFInstancesLog">
+              <PropertyRef Name="PK" />
+            </Principal>
+            <Dependent Role="MANA_ActivityLog">
+              <PropertyRef Name="FK_TaskLog" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TaskRunningTask">
+          <End Role="MANA_WorkflowRepository" Type="Self.MANA_WorkflowRepository" Multiplicity="0..1" />
+          <End Role="MANA_WFInstancesLog" Type="Self.MANA_WFInstancesLog" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MANA_WorkflowRepository">
+              <PropertyRef Name="PK" />
+            </Principal>
+            <Dependent Role="MANA_WFInstancesLog">
+              <PropertyRef Name="FK_TaskRepo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserActivityLog">
+          <End Role="MANA_User" Type="Self.MANA_User" Multiplicity="0..1" />
+          <End Role="MANA_ActivityLog" Type="Self.MANA_ActivityLog" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MANA_User">
+              <PropertyRef Name="PK" />
+            </Principal>
+            <Dependent Role="MANA_ActivityLog">
+              <PropertyRef Name="FK_ExecutedBy" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserActivityLog1">
+          <End Role="MANA_User" Type="Self.MANA_User" Multiplicity="0..1" />
+          <End Role="MANA_ActivityLog" Type="Self.MANA_ActivityLog" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MANA_User">
+              <PropertyRef Name="PK" />
+            </Principal>
+            <Dependent Role="MANA_ActivityLog">
+              <PropertyRef Name="FK_ControledBy" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserRunningTask">
+          <End Role="MANA_User" Type="Self.MANA_User" Multiplicity="0..1" />
+          <End Role="MANA_WFInstancesLog" Type="Self.MANA_WFInstancesLog" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MANA_User">
+              <PropertyRef Name="PK" />
+            </Principal>
+            <Dependent Role="MANA_WFInstancesLog">
+              <PropertyRef Name="FK_UserExec" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserTaskLog">
+          <End Role="MANA_User" Type="Self.MANA_User" Multiplicity="0..1" />
+          <End Role="MANA_WFInstancesLog" Type="Self.MANA_WFInstancesLog" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MANA_User">
+              <PropertyRef Name="PK" />
+            </Principal>
+            <Dependent Role="MANA_WFInstancesLog">
+              <PropertyRef Name="FK_UserCtrl" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_WFInstancesLogDossier">
+          <End Role="MANA_WFInstancesLog" Type="Self.MANA_WFInstancesLog" Multiplicity="0..1" />
+          <End Role="MANA_Dossier" Type="Self.MANA_Dossier" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MANA_WFInstancesLog">
+              <PropertyRef Name="PK" />
+            </Principal>
+            <Dependent Role="MANA_Dossier">
+              <PropertyRef Name="FK_WFInstanceLog" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="DBManaModelStoreContainer">
+          <EntitySet Name="MANA_ActivityLog" EntityType="Self.MANA_ActivityLog" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="MANA_Dossier" EntityType="Self.MANA_Dossier" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="MANA_User" EntityType="Self.MANA_User" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="MANA_WFInstancesLog" EntityType="Self.MANA_WFInstancesLog" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="MANA_WorkflowRepository" EntityType="Self.MANA_WorkflowRepository" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="InstancesTable" EntityType="Self.InstancesTable" store:Type="Tables" store:Schema="System.Activities.DurableInstancing">
+            <DefiningQuery>SELECT 
+    [InstancesTable].[Id] AS [Id], 
+    [InstancesTable].[SurrogateInstanceId] AS [SurrogateInstanceId], 
+    [InstancesTable].[SurrogateLockOwnerId] AS [SurrogateLockOwnerId], 
+    [InstancesTable].[PrimitiveDataProperties] AS [PrimitiveDataProperties], 
+    [InstancesTable].[ComplexDataProperties] AS [ComplexDataProperties], 
+    [InstancesTable].[WriteOnlyPrimitiveDataProperties] AS [WriteOnlyPrimitiveDataProperties], 
+    [InstancesTable].[WriteOnlyComplexDataProperties] AS [WriteOnlyComplexDataProperties], 
+    [InstancesTable].[MetadataProperties] AS [MetadataProperties], 
+    [InstancesTable].[DataEncodingOption] AS [DataEncodingOption], 
+    [InstancesTable].[MetadataEncodingOption] AS [MetadataEncodingOption], 
+    [InstancesTable].[Version] AS [Version], 
+    [InstancesTable].[PendingTimer] AS [PendingTimer], 
+    [InstancesTable].[CreationTime] AS [CreationTime], 
+    [InstancesTable].[LastUpdated] AS [LastUpdated], 
+    [InstancesTable].[WorkflowHostType] AS [WorkflowHostType], 
+    [InstancesTable].[ServiceDeploymentId] AS [ServiceDeploymentId], 
+    [InstancesTable].[SuspensionExceptionName] AS [SuspensionExceptionName], 
+    [InstancesTable].[SuspensionReason] AS [SuspensionReason], 
+    [InstancesTable].[BlockingBookmarks] AS [BlockingBookmarks], 
+    [InstancesTable].[LastMachineRunOn] AS [LastMachineRunOn], 
+    [InstancesTable].[ExecutionStatus] AS [ExecutionStatus], 
+    [InstancesTable].[IsInitialized] AS [IsInitialized], 
+    [InstancesTable].[IsSuspended] AS [IsSuspended], 
+    [InstancesTable].[IsReadyToRun] AS [IsReadyToRun], 
+    [InstancesTable].[IsCompleted] AS [IsCompleted], 
+    [InstancesTable].[SurrogateIdentityId] AS [SurrogateIdentityId]
+    FROM [System.Activities.DurableInstancing].[InstancesTable] AS [InstancesTable]</DefiningQuery>
+          </EntitySet>
+          <AssociationSet Name="FK_TaskLogActivityLog" Association="Self.FK_TaskLogActivityLog">
+            <End Role="MANA_WFInstancesLog" EntitySet="MANA_WFInstancesLog" />
+            <End Role="MANA_ActivityLog" EntitySet="MANA_ActivityLog" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TaskRunningTask" Association="Self.FK_TaskRunningTask">
+            <End Role="MANA_WorkflowRepository" EntitySet="MANA_WorkflowRepository" />
+            <End Role="MANA_WFInstancesLog" EntitySet="MANA_WFInstancesLog" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserActivityLog" Association="Self.FK_UserActivityLog">
+            <End Role="MANA_User" EntitySet="MANA_User" />
+            <End Role="MANA_ActivityLog" EntitySet="MANA_ActivityLog" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserActivityLog1" Association="Self.FK_UserActivityLog1">
+            <End Role="MANA_User" EntitySet="MANA_User" />
+            <End Role="MANA_ActivityLog" EntitySet="MANA_ActivityLog" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserRunningTask" Association="Self.FK_UserRunningTask">
+            <End Role="MANA_User" EntitySet="MANA_User" />
+            <End Role="MANA_WFInstancesLog" EntitySet="MANA_WFInstancesLog" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserTaskLog" Association="Self.FK_UserTaskLog">
+            <End Role="MANA_User" EntitySet="MANA_User" />
+            <End Role="MANA_WFInstancesLog" EntitySet="MANA_WFInstancesLog" />
+          </AssociationSet>
+          <AssociationSet Name="FK_WFInstancesLogDossier" Association="Self.FK_WFInstancesLogDossier">
+            <End Role="MANA_WFInstancesLog" EntitySet="MANA_WFInstancesLog" />
+            <End Role="MANA_Dossier" EntitySet="MANA_Dossier" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="DBManaModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="ActivityLog">
+          <Key>
+            <PropertyRef Name="PK" />
+          </Key>
+          <Property Name="PK" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ActivityStatus" Type="String" MaxLength="64" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ActivityName" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="StartTime" Type="DateTime" Nullable="false" Precision="7" />
+          <Property Name="EndTime" Type="DateTime" Nullable="false" Precision="7" />
+          <Property Name="FK_ExecutedBy" Type="Int32" />
+          <Property Name="FK_ControledBy" Type="Int32" />
+          <Property Name="FK_TaskLog" Type="Int32" Nullable="false" />
+          <Property Name="FK_WFInstanceID" Type="Guid" />
+          <Property Name="ActivityID" Type="String" MaxLength="64" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Handler_User" Relationship="Self.FK_UserActivityLog" FromRole="MANA_ActivityLog" ToRole="MANA_User" />
+          <NavigationProperty Name="Controler_User" Relationship="Self.FK_UserActivityLog1" FromRole="MANA_ActivityLog" ToRole="MANA_User" />
+          <NavigationProperty Name="WFInstancesLogItems" Relationship="DBManaModel.FK_TaskLogActivityLog1" FromRole="ActivityLog" ToRole="MANA_WFInstancesLog" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="PK" />
+          </Key>
+          <Property Name="PK" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="UserID" Type="String" MaxLength="64" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Handler_ActivityLogItems" Relationship="Self.FK_UserActivityLog" FromRole="MANA_User" ToRole="MANA_ActivityLog" />
+          <NavigationProperty Name="Controler_ActivityLogItems" Relationship="Self.FK_UserActivityLog1" FromRole="MANA_User" ToRole="MANA_ActivityLog" />
+          <NavigationProperty Name="Handled_WFInstancesLogItems" Relationship="DBManaModel.FK_UserRunningTask1" FromRole="User" ToRole="MANA_WFInstancesLog" />
+          <NavigationProperty Name="Controlled_WFInstancesLogItems" Relationship="DBManaModel.FK_UserTaskLog1" FromRole="User" ToRole="MANA_WFInstancesLog" />
+        </EntityType>
+        <EntityType Name="InstancesTable">
+          <Key>
+            <PropertyRef Name="Id" />
+            <PropertyRef Name="SurrogateInstanceId" />
+            <PropertyRef Name="Version" />
+            <PropertyRef Name="CreationTime" />
+            <PropertyRef Name="SurrogateIdentityId" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" />
+          <Property Name="SurrogateInstanceId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="SurrogateLockOwnerId" Type="Int64" />
+          <Property Name="PrimitiveDataProperties" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="ComplexDataProperties" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="WriteOnlyPrimitiveDataProperties" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="WriteOnlyComplexDataProperties" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="MetadataProperties" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="DataEncodingOption" Type="Byte" />
+          <Property Name="MetadataEncodingOption" Type="Byte" />
+          <Property Name="Version" Type="Int64" Nullable="false" />
+          <Property Name="PendingTimer" Type="DateTime" Precision="3" />
+          <Property Name="CreationTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LastUpdated" Type="DateTime" Precision="3" />
+          <Property Name="WorkflowHostType" Type="Guid" />
+          <Property Name="ServiceDeploymentId" Type="Int64" />
+          <Property Name="SuspensionExceptionName" Type="String" MaxLength="450" FixedLength="false" Unicode="true" />
+          <Property Name="SuspensionReason" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="BlockingBookmarks" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="LastMachineRunOn" Type="String" MaxLength="450" FixedLength="false" Unicode="true" />
+          <Property Name="ExecutionStatus" Type="String" MaxLength="450" FixedLength="false" Unicode="true" />
+          <Property Name="IsInitialized" Type="Boolean" />
+          <Property Name="IsSuspended" Type="Boolean" />
+          <Property Name="IsReadyToRun" Type="Boolean" />
+          <Property Name="IsCompleted" Type="Boolean" />
+          <Property Name="SurrogateIdentityId" Type="Int64" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_UserActivityLog">
+          <End Role="MANA_User" Type="DBManaModel.User" Multiplicity="0..1" />
+          <End Role="MANA_ActivityLog" Type="DBManaModel.ActivityLog" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MANA_User">
+              <PropertyRef Name="PK" />
+            </Principal>
+            <Dependent Role="MANA_ActivityLog">
+              <PropertyRef Name="FK_ExecutedBy" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserActivityLog1">
+          <End Role="MANA_User" Type="DBManaModel.User" Multiplicity="0..1" />
+          <End Role="MANA_ActivityLog" Type="DBManaModel.ActivityLog" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MANA_User">
+              <PropertyRef Name="PK" />
+            </Principal>
+            <Dependent Role="MANA_ActivityLog">
+              <PropertyRef Name="FK_ControledBy" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="DBManaEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="MANA_ActivityLog" EntityType="DBManaModel.ActivityLog" />
+          <EntitySet Name="MANA_User" EntityType="DBManaModel.User" />
+          <EntitySet Name="InstancesTable" EntityType="Self.InstancesTable" />
+          <AssociationSet Name="FK_UserActivityLog" Association="Self.FK_UserActivityLog">
+            <End Role="MANA_User" EntitySet="MANA_User" />
+            <End Role="MANA_ActivityLog" EntitySet="MANA_ActivityLog" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserActivityLog1" Association="Self.FK_UserActivityLog1">
+            <End Role="MANA_User" EntitySet="MANA_User" />
+            <End Role="MANA_ActivityLog" EntitySet="MANA_ActivityLog" />
+          </AssociationSet>
+          <EntitySet Name="MANA_WFInstancesLog" EntityType="DBManaModel.WFInstancesLog" />
+          <EntitySet Name="MANA_WorkflowRepository" EntityType="DBManaModel.WorkflowRepository" />
+          <AssociationSet Name="FK_TaskLogActivityLog1" Association="DBManaModel.FK_TaskLogActivityLog1">
+            <End Role="MANA_WFInstancesLog" EntitySet="MANA_WFInstancesLog" />
+            <End Role="ActivityLog" EntitySet="MANA_ActivityLog" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserRunningTask1" Association="DBManaModel.FK_UserRunningTask1">
+            <End Role="User" EntitySet="MANA_User" />
+            <End Role="MANA_WFInstancesLog" EntitySet="MANA_WFInstancesLog" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserTaskLog1" Association="DBManaModel.FK_UserTaskLog1">
+            <End Role="User" EntitySet="MANA_User" />
+            <End Role="MANA_WFInstancesLog" EntitySet="MANA_WFInstancesLog" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TaskRunningTask1" Association="DBManaModel.FK_TaskRunningTask1">
+            <End Role="MANA_WorkflowRepository" EntitySet="MANA_WorkflowRepository" />
+            <End Role="MANA_WFInstancesLog" EntitySet="MANA_WFInstancesLog" />
+          </AssociationSet>
+          <EntitySet Name="MANA_Dossier" EntityType="DBManaModel.Dossier" />
+          <AssociationSet Name="FK_WFInstancesLogDossier" Association="DBManaModel.FK_WFInstancesLogDossier">
+            <End Role="WFInstancesLog" EntitySet="MANA_WFInstancesLog" />
+            <End Role="MANA_Dossier" EntitySet="MANA_Dossier" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="WFInstancesLog">
+          <Key>
+            <PropertyRef Name="PK" />
+          </Key>
+          <Property Name="PK" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FK_TaskRepo" Type="Int32" />
+          <Property Name="FK_UserExec" Type="Int32" />
+          <Property Name="Status" Type="String" Nullable="false" MaxLength="64" FixedLength="false" Unicode="true" />
+          <Property Name="StartTime" Type="DateTime" Nullable="false" Precision="7" />
+          <Property Name="EndTime" Type="DateTime" Nullable="false" Precision="7" />
+          <Property Name="FK_UserCtrl" Type="Int32" />
+          <Property Name="FK_WFInstanceID" Type="Guid" />
+          <NavigationProperty Name="ActivityLogItems" Relationship="DBManaModel.FK_TaskLogActivityLog1" FromRole="MANA_WFInstancesLog" ToRole="ActivityLog" />
+          <NavigationProperty Name="Handler_User" Relationship="DBManaModel.FK_UserRunningTask1" FromRole="MANA_WFInstancesLog" ToRole="User" />
+          <NavigationProperty Name="Controler_User" Relationship="DBManaModel.FK_UserTaskLog1" FromRole="MANA_WFInstancesLog" ToRole="User" />
+          <NavigationProperty Name="WorkflowRepository" Relationship="DBManaModel.FK_TaskRunningTask1" FromRole="MANA_WFInstancesLog" ToRole="MANA_WorkflowRepository" />
+          <Property Name="Topic" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Dossier" Relationship="DBManaModel.FK_WFInstancesLogDossier" FromRole="WFInstancesLog" ToRole="MANA_Dossier" />
+        </EntityType>
+        <EntityType Name="WorkflowRepository">
+          <Key>
+            <PropertyRef Name="PK" />
+          </Key>
+          <Property Name="PK" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" MaxLength="1024" FixedLength="false" Unicode="true" Nullable="true" />
+          <Property Name="ValidityStartDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ValidityEndDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="WorkFlow" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Area" Type="String" Nullable="true" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="Function" Type="String" Nullable="true" MaxLength="128" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="WFInstancesLogItems" Relationship="DBManaModel.FK_TaskRunningTask1" FromRole="MANA_WorkflowRepository" ToRole="MANA_WFInstancesLog" />
+        </EntityType>
+        <Association Name="FK_TaskLogActivityLog1">
+          <End Type="DBManaModel.WFInstancesLog" Role="MANA_WFInstancesLog" Multiplicity="1" />
+          <End Type="DBManaModel.ActivityLog" Role="ActivityLog" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MANA_WFInstancesLog">
+              <PropertyRef Name="PK" />
+            </Principal>
+            <Dependent Role="ActivityLog">
+              <PropertyRef Name="FK_TaskLog" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserRunningTask1">
+          <End Type="DBManaModel.User" Role="User" Multiplicity="0..1" />
+          <End Type="DBManaModel.WFInstancesLog" Role="MANA_WFInstancesLog" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="PK" />
+            </Principal>
+            <Dependent Role="MANA_WFInstancesLog">
+              <PropertyRef Name="FK_UserExec" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserTaskLog1">
+          <End Type="DBManaModel.User" Role="User" Multiplicity="0..1" />
+          <End Type="DBManaModel.WFInstancesLog" Role="MANA_WFInstancesLog" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="PK" />
+            </Principal>
+            <Dependent Role="MANA_WFInstancesLog">
+              <PropertyRef Name="FK_UserCtrl" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TaskRunningTask1">
+          <End Type="DBManaModel.WorkflowRepository" Role="MANA_WorkflowRepository" Multiplicity="0..1" />
+          <End Type="DBManaModel.WFInstancesLog" Role="MANA_WFInstancesLog" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MANA_WorkflowRepository">
+              <PropertyRef Name="PK" />
+            </Principal>
+            <Dependent Role="MANA_WFInstancesLog">
+              <PropertyRef Name="FK_TaskRepo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Dossier">
+          <Key>
+            <PropertyRef Name="PK" />
+          </Key>
+          <Property Name="PK" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Status" Type="String" MaxLength="64" FixedLength="false" Unicode="true" />
+          <Property Name="OpenDate" Type="DateTime" Precision="3" />
+          <Property Name="CloseDate" Type="DateTime" Precision="3" />
+          <Property Name="FK_WFInstanceLog" Type="Int32" />
+          <NavigationProperty Name="WFInstancesLogItem" Relationship="DBManaModel.FK_WFInstancesLogDossier" FromRole="MANA_Dossier" ToRole="WFInstancesLog" />
+        </EntityType>
+        <Association Name="FK_WFInstancesLogDossier">
+          <End Type="DBManaModel.WFInstancesLog" Role="WFInstancesLog" Multiplicity="0..1" />
+          <End Type="DBManaModel.Dossier" Role="MANA_Dossier" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="WFInstancesLog">
+              <PropertyRef Name="PK" />
+            </Principal>
+            <Dependent Role="MANA_Dossier">
+              <PropertyRef Name="FK_WFInstanceLog" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="DBManaModelStoreContainer" CdmEntityContainer="DBManaEntities">
+          <EntitySetMapping Name="MANA_ActivityLog">
+            <EntityTypeMapping TypeName="DBManaModel.ActivityLog">
+              <MappingFragment StoreEntitySet="MANA_ActivityLog">
+                <ScalarProperty Name="PK" ColumnName="PK" />
+                <ScalarProperty Name="ActivityStatus" ColumnName="ActivityStatus" />
+                <ScalarProperty Name="ActivityName" ColumnName="ActivityName" />
+                <ScalarProperty Name="StartTime" ColumnName="StartTime" />
+                <ScalarProperty Name="EndTime" ColumnName="EndTime" />
+                <ScalarProperty Name="FK_ExecutedBy" ColumnName="FK_ExecutedBy" />
+                <ScalarProperty Name="FK_ControledBy" ColumnName="FK_ControledBy" />
+                <ScalarProperty Name="FK_TaskLog" ColumnName="FK_TaskLog" />
+                <ScalarProperty Name="FK_WFInstanceID" ColumnName="FK_WFInstanceID" />
+                <ScalarProperty Name="ActivityID" ColumnName="ActivityID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MANA_User">
+            <EntityTypeMapping TypeName="DBManaModel.User">
+              <MappingFragment StoreEntitySet="MANA_User">
+                <ScalarProperty Name="PK" ColumnName="PK" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="InstancesTable">
+            <EntityTypeMapping TypeName="DBManaModel.InstancesTable">
+              <MappingFragment StoreEntitySet="InstancesTable">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="SurrogateInstanceId" ColumnName="SurrogateInstanceId" />
+                <ScalarProperty Name="SurrogateLockOwnerId" ColumnName="SurrogateLockOwnerId" />
+                <ScalarProperty Name="PrimitiveDataProperties" ColumnName="PrimitiveDataProperties" />
+                <ScalarProperty Name="ComplexDataProperties" ColumnName="ComplexDataProperties" />
+                <ScalarProperty Name="WriteOnlyPrimitiveDataProperties" ColumnName="WriteOnlyPrimitiveDataProperties" />
+                <ScalarProperty Name="WriteOnlyComplexDataProperties" ColumnName="WriteOnlyComplexDataProperties" />
+                <ScalarProperty Name="MetadataProperties" ColumnName="MetadataProperties" />
+                <ScalarProperty Name="DataEncodingOption" ColumnName="DataEncodingOption" />
+                <ScalarProperty Name="MetadataEncodingOption" ColumnName="MetadataEncodingOption" />
+                <ScalarProperty Name="Version" ColumnName="Version" />
+                <ScalarProperty Name="PendingTimer" ColumnName="PendingTimer" />
+                <ScalarProperty Name="CreationTime" ColumnName="CreationTime" />
+                <ScalarProperty Name="LastUpdated" ColumnName="LastUpdated" />
+                <ScalarProperty Name="WorkflowHostType" ColumnName="WorkflowHostType" />
+                <ScalarProperty Name="ServiceDeploymentId" ColumnName="ServiceDeploymentId" />
+                <ScalarProperty Name="SuspensionExceptionName" ColumnName="SuspensionExceptionName" />
+                <ScalarProperty Name="SuspensionReason" ColumnName="SuspensionReason" />
+                <ScalarProperty Name="BlockingBookmarks" ColumnName="BlockingBookmarks" />
+                <ScalarProperty Name="LastMachineRunOn" ColumnName="LastMachineRunOn" />
+                <ScalarProperty Name="ExecutionStatus" ColumnName="ExecutionStatus" />
+                <ScalarProperty Name="IsInitialized" ColumnName="IsInitialized" />
+                <ScalarProperty Name="IsSuspended" ColumnName="IsSuspended" />
+                <ScalarProperty Name="IsReadyToRun" ColumnName="IsReadyToRun" />
+                <ScalarProperty Name="IsCompleted" ColumnName="IsCompleted" />
+                <ScalarProperty Name="SurrogateIdentityId" ColumnName="SurrogateIdentityId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MANA_WFInstancesLog">
+            <EntityTypeMapping TypeName="DBManaModel.WFInstancesLog">
+              <MappingFragment StoreEntitySet="MANA_WFInstancesLog">
+                <ScalarProperty Name="Topic" ColumnName="Topic" />
+                <ScalarProperty Name="FK_WFInstanceID" ColumnName="FK_WFInstanceID" />
+                <ScalarProperty Name="FK_UserCtrl" ColumnName="FK_UserCtrl" />
+                <ScalarProperty Name="EndTime" ColumnName="EndTime" />
+                <ScalarProperty Name="StartTime" ColumnName="StartTime" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="FK_UserExec" ColumnName="FK_UserExec" />
+                <ScalarProperty Name="FK_TaskRepo" ColumnName="FK_TaskRepo" />
+                <ScalarProperty Name="PK" ColumnName="PK" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MANA_WorkflowRepository">
+            <EntityTypeMapping TypeName="DBManaModel.WorkflowRepository">
+              <MappingFragment StoreEntitySet="MANA_WorkflowRepository">
+                <ScalarProperty Name="Function" ColumnName="Function" />
+                <ScalarProperty Name="Area" ColumnName="Area" />
+                <ScalarProperty Name="WorkFlow" ColumnName="WorkFlow" />
+                <ScalarProperty Name="ValidityEndDate" ColumnName="ValidityEndDate" />
+                <ScalarProperty Name="ValidityStartDate" ColumnName="ValidityStartDate" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="PK" ColumnName="PK" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MANA_Dossier">
+            <EntityTypeMapping TypeName="DBManaModel.Dossier">
+              <MappingFragment StoreEntitySet="MANA_Dossier">
+                <ScalarProperty Name="FK_WFInstanceLog" ColumnName="FK_WFInstanceLog" />
+                <ScalarProperty Name="CloseDate" ColumnName="CloseDate" />
+                <ScalarProperty Name="OpenDate" ColumnName="OpenDate" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="PK" ColumnName="PK" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="False" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

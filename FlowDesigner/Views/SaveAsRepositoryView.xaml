@@ -1,0 +1,19 @@
+﻿<Window x:Class="FlowDesigner.SaveAsRepositoryView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Flow Designer Repository" Height="137.594" Width="314.662">
+    <Grid>
+        <StackPanel x:Name="RepositoryStackPanel"   Orientation="Vertical" >
+            <Label x:Name="WFNameLabel" Margin="5,5" Content="Workflow Name:" />
+            <TextBox x:Name="WFNameTextBox"  Margin="5,0" Width="400" HorizontalAlignment="Left" TextWrapping="WrapWithOverflow"/>
+
+            <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch"   
+					Orientation="Horizontal" Margin="5,5,5,0" Background="#FF2A3A56">
+                <Button x:Name="SaveWFRepolButton" IsDefault="True" Content="Save" HorizontalAlignment="Right" 
+						Margin="5,5" VerticalAlignment="Top" Width="75" Click="SaveWFRepolButton_Click"  />
+                <Button x:Name="CancellButton" IsCancel="True" Content="Cancel" HorizontalAlignment="Right" 
+						Margin="5,5" VerticalAlignment="Top" Width="75" />
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</Window>

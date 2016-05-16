@@ -1,0 +1,92 @@
+﻿<Activity mc:Ignorable="sap sap2010 sads" x:Class="SaleProcess" sap2010:ExpressionActivityEditor.ExpressionActivityEditor="VB" sap2010:WorkflowViewState.IdRef="FlowDesigner.defaultFlow_1"
+ xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities"
+ xmlns:ha="clr-namespace:HostApplication.Activities;assembly=HostApplication"
+ xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+ xmlns:sads="http://schemas.microsoft.com/netfx/2010/xaml/activities/debugger"
+ xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation"
+ xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation"
+ xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib"
+ xmlns:sco="clr-namespace:System.Collections.ObjectModel;assembly=mscorlib"
+ xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <TextExpression.NamespacesForImplementation>
+    <sco:Collection x:TypeArguments="x:String">
+      <x:String>System</x:String>
+      <x:String>System.Collections.Generic</x:String>
+      <x:String>System.Data</x:String>
+      <x:String>System.Linq</x:String>
+      <x:String>System.Text</x:String>
+      <x:String>System.Windows.Forms</x:String>
+      <x:String>Microsoft.VisualBasic.CompilerServices</x:String>
+      <x:String>System.Activities</x:String>
+    </sco:Collection>
+  </TextExpression.NamespacesForImplementation>
+  <TextExpression.ReferencesForImplementation>
+    <sco:Collection x:TypeArguments="AssemblyReference">
+      <AssemblyReference>mscorlib</AssemblyReference>
+      <AssemblyReference>System</AssemblyReference>
+      <AssemblyReference>System.Core</AssemblyReference>
+      <AssemblyReference>System.Data</AssemblyReference>
+      <AssemblyReference>System.ServiceModel</AssemblyReference>
+      <AssemblyReference>System.Xml</AssemblyReference>
+      <AssemblyReference>System.Windows.Forms</AssemblyReference>
+      <AssemblyReference>Microsoft.VisualBasic</AssemblyReference>
+      <AssemblyReference>System.Activities</AssemblyReference>
+    </sco:Collection>
+  </TextExpression.ReferencesForImplementation>
+  <Sequence DisplayName="SaleSteps" sap2010:WorkflowViewState.IdRef="Sequence_1">
+    <Sequence.Variables>
+      <Variable x:TypeArguments="x:String" Name="temp" />
+      <Variable x:TypeArguments="x:String" Name="AutorisationCredit" />
+    </Sequence.Variables>
+    <ha:ActivityShow_UC_MessageWith2Buttons DisplayName="création" sap2010:WorkflowViewState.IdRef="ActivityShow_UC_MessageWith2Buttons_1" Result="[temp]" message="Création d'une nouvelle commande. Vérifier si le client dispose d'une ligne de crédit suffisante" status="CREATED" />
+    <ha:ActivityMessageYesNo DisplayName="check credit" sap2010:WorkflowViewState.IdRef="ActivityMessageYesNo_1" Result="[AutorisationCredit]" message="Vérifier si le crédit disponible du client est inférieure au montant de la commande" status="CHECKED" />
+    <If Condition="[AutorisationCredit = &quot;YES&quot;]" DisplayName="traitement commande" sap2010:WorkflowViewState.IdRef="If_1">
+      <If.Then>
+        <Sequence sap2010:WorkflowViewState.IdRef="Sequence_2">
+          <ha:ActivityShow_UC_MessageWith2Buttons DisplayName="notification" sap2010:WorkflowViewState.IdRef="ActivityShow_UC_MessageWith2Buttons_2" Result="[temp]" message="Envoyer une confirmation de commande au client. " status="NOTIFIED" />
+          <ha:ActivityShow_UC_MessageWithDelays DisplayName="préparation commande" sap2010:WorkflowViewState.IdRef="ActivityShow_UC_MessageWithDelays_1" Result="[temp]" delay="6" message="La commande est en cours de préparation ... Veuillez patienter svp." status="ORDER READY" />
+          <ha:ActivityShow_UC_MessageWith2Buttons DisplayName="facturation" sap2010:WorkflowViewState.IdRef="ActivityShow_UC_MessageWith2Buttons_3" Result="[temp]" message="Traitement administratif de la commande : facturation au client et comptabilisation de la vente" status="INVOICED" />
+        </Sequence>
+      </If.Then>
+      <If.Else>
+        <ha:ActivityShow_UC_MessageWith2Buttons DisplayName="suspendre commande" sap2010:WorkflowViewState.IdRef="ActivityShow_UC_MessageWith2Buttons_5" Result="[temp]" message="Le crédit est dépassé, notifier le client que la commande est mise en suspend." status="FROZEN" />
+      </If.Else>
+    </If>
+    <ha:ActivityShow_UC_MessageWith2Buttons DisplayName="cloture" sap2010:WorkflowViewState.IdRef="ActivityShow_UC_MessageWith2Buttons_4" Result="[temp]" message="Le Process de vente est terminé. Le dossier peut être clôturé" status="CLOSED" />
+    <sads:DebugSymbol.Symbol>d2RDOlxVc2Vyc1x1bmkxbGFiXE9uZURyaXZlXFByb2plY3RzXFZpc3VhbCBTdHVkaW8gMjAxM1xVTkkxIE1hbmFcTWFuYSB2MVxTYWxlIEJ1c2luZXNzIFByb2Nlc3MgMi54YW1sISQDOQ4CAQEpBSmaAgIBJSoFKoECAgEgKwU2CgIBBzcFN/UBAgECKZMBKZsBAgEoKY4CKZcCAgEnKaQBKYYCAgEmKnkqjwECASMq9QEq/gECASIqmAEq7QECASErEys7AgEILQkxFAIBDzQJNJUCAgEKN5IBN5oBAgEFN+oBN/IBAgEEN6MBN+IBAgEDLgsu9QECARsvCy+ZAgIBFTALMKMCAgEQNKEBNKkBAgENNIoCNJICAgEMNLIBNIICAgELLp0BLqUBAgEeLugBLvIBAgEdLq4BLuABAgEcL7ABL7MBAgEaL6EBL6kBAgEYL4kCL5YCAgEXL7wBL4ECAgEWMJwBMKQBAgETMJYCMKACAgESMK0BMI4CAgER</sads:DebugSymbol.Symbol>
+  </Sequence>
+  <sap2010:WorkflowViewState.ViewStateManager>
+    <sap2010:ViewStateManager>
+      <sap2010:ViewStateData Id="ActivityShow_UC_MessageWith2Buttons_1" sap:VirtualizedContainerService.HintSize="464,22" />
+      <sap2010:ViewStateData Id="ActivityMessageYesNo_1" sap:VirtualizedContainerService.HintSize="464,22" />
+      <sap2010:ViewStateData Id="ActivityShow_UC_MessageWith2Buttons_2" sap:VirtualizedContainerService.HintSize="200,22" />
+      <sap2010:ViewStateData Id="ActivityShow_UC_MessageWithDelays_1" sap:VirtualizedContainerService.HintSize="200,22" />
+      <sap2010:ViewStateData Id="ActivityShow_UC_MessageWith2Buttons_3" sap:VirtualizedContainerService.HintSize="200,22" />
+      <sap2010:ViewStateData Id="Sequence_2" sap:VirtualizedContainerService.HintSize="222,270">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="ActivityShow_UC_MessageWith2Buttons_5" sap:VirtualizedContainerService.HintSize="200,22" />
+      <sap2010:ViewStateData Id="If_1" sap:VirtualizedContainerService.HintSize="464,418">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            <x:Boolean x:Key="IsPinned">False</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="ActivityShow_UC_MessageWith2Buttons_4" sap:VirtualizedContainerService.HintSize="464,22" />
+      <sap2010:ViewStateData Id="Sequence_1" sap:VirtualizedContainerService.HintSize="486,728">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="FlowDesigner.defaultFlow_1" sap:VirtualizedContainerService.HintSize="526,808" />
+    </sap2010:ViewStateManager>
+  </sap2010:WorkflowViewState.ViewStateManager>
+</Activity>

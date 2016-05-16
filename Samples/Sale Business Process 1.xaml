@@ -1,0 +1,67 @@
+﻿<Activity mc:Ignorable="sap sap2010 sads" x:Class="FlowDesigner.defaultFlow" sap2010:ExpressionActivityEditor.ExpressionActivityEditor="VB" sap2010:WorkflowViewState.IdRef="FlowDesigner.defaultFlow_1"
+ xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities"
+ xmlns:ha="clr-namespace:HostApplication.Activities;assembly=HostApplication"
+ xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+ xmlns:sads="http://schemas.microsoft.com/netfx/2010/xaml/activities/debugger"
+ xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation"
+ xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation"
+ xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib"
+ xmlns:sco="clr-namespace:System.Collections.ObjectModel;assembly=mscorlib"
+ xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <TextExpression.NamespacesForImplementation>
+    <sco:Collection x:TypeArguments="x:String">
+      <x:String>System</x:String>
+      <x:String>System.Collections.Generic</x:String>
+      <x:String>System.Data</x:String>
+      <x:String>System.Linq</x:String>
+      <x:String>System.Text</x:String>
+      <x:String>System.Windows.Forms</x:String>
+    </sco:Collection>
+  </TextExpression.NamespacesForImplementation>
+  <TextExpression.ReferencesForImplementation>
+    <sco:Collection x:TypeArguments="AssemblyReference">
+      <AssemblyReference>mscorlib</AssemblyReference>
+      <AssemblyReference>System</AssemblyReference>
+      <AssemblyReference>System.Core</AssemblyReference>
+      <AssemblyReference>System.Data</AssemblyReference>
+      <AssemblyReference>System.ServiceModel</AssemblyReference>
+      <AssemblyReference>System.Xml</AssemblyReference>
+      <AssemblyReference>System.Windows.Forms</AssemblyReference>
+    </sco:Collection>
+  </TextExpression.ReferencesForImplementation>
+  <Sequence sap2010:Annotation.AnnotationText="Process de vente pour les clients ayant obtenus une ligne de crédit." sap2010:WorkflowViewState.IdRef="Sequence_1">
+    <Sequence.Variables>
+      <Variable x:TypeArguments="x:String" Name="temp" />
+    </Sequence.Variables>
+    <ha:ActivityShow_UC_MessageWith2Buttons sap2010:Annotation.AnnotationText="Lors de la création de la commande, le vendeur doit vérifier la ligne de crédit du client." DisplayName="création" sap2010:WorkflowViewState.IdRef="ActivityShow_UC_MessageWith2Buttons_1" Result="[temp]" message="Création d'une nouvelle commande. Vérifier si le client dispose d'une ligne de crédit suffisante" status="CREATED" />
+    <ha:ActivityShow_UC_MessageWith2Buttons DisplayName="notification" sap2010:WorkflowViewState.IdRef="ActivityShow_UC_MessageWith2Buttons_2" Result="[temp]" message="Envoyer une confirmation de commande au client. Si le crédit est dépassé, notifier le client que la commande est mise en suspend." status="NOTIFIED" />
+    <ha:ActivityShow_UC_MessageWithDelays DisplayName="préparation commande" sap2010:WorkflowViewState.IdRef="ActivityShow_UC_MessageWithDelays_1" Result="[temp]" delay="6" message="La commande est en cours de préparation ... Veuillez patienter svp." status="ORDER READY" />
+    <ha:ActivityShow_UC_MessageWith2Buttons DisplayName="facturation" sap2010:WorkflowViewState.IdRef="ActivityShow_UC_MessageWith2Buttons_3" Result="[temp]" message="Traitement administratif de la commande : facturation au client et comptabilisation de la vente" status="INVOICED" />
+    <ha:ActivityShow_UC_MessageWith2Buttons DisplayName="cloture" sap2010:WorkflowViewState.IdRef="ActivityShow_UC_MessageWith2Buttons_4" Result="[temp]" message="Le Process de vente est terminé. Le dossier peut être clôturé" status="CLOSED" />
+    <sads:DebugSymbol.Symbol>d2RDOlxVc2Vyc1x1bmkxbGFiXE9uZURyaXZlXFByb2plY3RzXFZpc3VhbCBTdHVkaW8gMjAxM1xVTkkxIE1hbmFcTWFuYSB2MVxTYWxlIEJ1c2luZXNzIFByb2Nlc3MgMS54YW1sFiADKg4CAQEkBSSZAwIBFyUFJcACAgESJgUmkwICAQwnBSedAgIBBygFKPUBAgECJJICJJoCAgEaJI0DJJYDAgEZJKMCJIUDAgEYJZcBJZ8BAgEVJbMCJb0CAgEUJagBJasCAgETJqoBJq0BAgERJpsBJqMBAgEPJoMCJpACAgEOJrYBJvsBAgENJ5YBJ54BAgEKJ5ACJ5oCAgEJJ6cBJ4gCAgEIKJIBKJoBAgEFKOoBKPIBAgEEKKMBKOIBAgED</sads:DebugSymbol.Symbol>
+  </Sequence>
+  <sap2010:WorkflowViewState.ViewStateManager>
+    <sap2010:ViewStateManager>
+      <sap2010:ViewStateData Id="ActivityShow_UC_MessageWith2Buttons_1" sap:VirtualizedContainerService.HintSize="200,92">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="ActivityShow_UC_MessageWith2Buttons_2" sap:VirtualizedContainerService.HintSize="200,22" />
+      <sap2010:ViewStateData Id="ActivityShow_UC_MessageWithDelays_1" sap:VirtualizedContainerService.HintSize="200,22" />
+      <sap2010:ViewStateData Id="ActivityShow_UC_MessageWith2Buttons_3" sap:VirtualizedContainerService.HintSize="200,22" />
+      <sap2010:ViewStateData Id="ActivityShow_UC_MessageWith2Buttons_4" sap:VirtualizedContainerService.HintSize="200,22" />
+      <sap2010:ViewStateData Id="Sequence_1" sap:VirtualizedContainerService.HintSize="222,504">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="FlowDesigner.defaultFlow_1" sap:VirtualizedContainerService.HintSize="262,584" />
+    </sap2010:ViewStateManager>
+  </sap2010:WorkflowViewState.ViewStateManager>
+</Activity>
