@@ -7,4 +7,5 @@ Mana is composed of:
  - A Workflow designer to model Business Processes.
  - A Workflow runner that allow to execute processes. These processes can be interrupted or woken up following the requirements defined during their modeling (see [Why Workflows?](https://github.com/uni1PBN/Mana/wiki/Why-Workflows) in the Wiki).
 
+**Getting Started
 In order to run this application, you must first setup the database and the Entity Framework data model (see Wiki - [Setup database](https://github.com/uni1PBN/Mana/wiki/Setup-Database)).
