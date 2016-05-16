@@ -341,7 +341,6 @@ namespace FlowDesigner
                 ClearDesigner();
                 AddDesigner(dialogOpen.FileName);
                 AddPropertyInspector();
-
                 WFRepositoryCurrentItem = new WorkflowRepository();
                 WFRepositoryCurrentItem.ValidityStartDate = DateTime.Now;
                 WFRepositoryCurrentItem.ValidityEndDate = DateTime.MaxValue;
