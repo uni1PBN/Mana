@@ -7,11 +7,11 @@
       <Diagram DiagramId="107cffe82c8f4a5d972047b24a532389" Name="Diagram1" ZoomLevel="74">
         <EntityTypeShape EntityType="DBManaModel.ActivityLog" Width="1.5" PointX="0.625" PointY="4.375" IsExpanded="true" />
         <EntityTypeShape EntityType="DBManaModel.User" Width="2.375" PointX="2.875" PointY="5.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="DBManaModel.InstancesTable" Width="1.5" PointX="0.75" PointY="8.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="DBManaModel.InstancesTable" Width="2.625" PointX="0.75" PointY="8.875" IsExpanded="true" />
         <AssociationConnector Association="DBManaModel.FK_UserActivityLog" ManuallyRouted="false" />
         <AssociationConnector Association="DBManaModel.FK_UserActivityLog1" ManuallyRouted="false" />
         <EntityTypeShape EntityType="DBManaModel.WFInstancesLog" Width="2.5" PointX="6.75" PointY="4.125" />
-        <EntityTypeShape EntityType="DBManaModel.WorkflowRepository" Width="2" PointX="1.5" PointY="0.5" />
+        <EntityTypeShape EntityType="DBManaModel.WorkflowRepository" Width="2" PointX="4.375" PointY="0.5" />
         <AssociationConnector Association="DBManaModel.FK_TaskLogActivityLog1" />
         <AssociationConnector Association="DBManaModel.FK_UserRunningTask1" />
         <AssociationConnector Association="DBManaModel.FK_UserTaskLog1" />
