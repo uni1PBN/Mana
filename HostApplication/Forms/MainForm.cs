@@ -55,6 +55,7 @@ namespace HostApplication
             Activity mywf = GetActivityFromWorkflowRepository(wfRepoItem);
             if (mywf != null)
             {
+                this.DossierTextBox.Text = wfRepoItem.Name;
                 CREATE_dossier();
                 RUN(wfRepoItem, mywf, Guid.Parse("00000000-0000-0000-0000-000000000000"), dossier);
                 this.Text = "Business Process : " + " (" + wfapp.Id.ToString() + ")";
@@ -89,6 +90,7 @@ namespace HostApplication
         {
             if (wfStatus == WFStatus.Started) wfapp.Unload();
         }
+
         #endregion
 
         #region WF Methods
