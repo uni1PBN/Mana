@@ -9,6 +9,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HostApplication", "HostAppl
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data", "Data\Data.csproj", "{2037C32C-17BC-4B09-A14B-74B7E08537CA}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{1C9889C4-D240-4162-B6F2-73BAC4358D56}"
+	ProjectSection(SolutionItems) = preProject
+		..\..\..\Pictures\DBManaSetup.jpg = ..\..\..\Pictures\DBManaSetup.jpg
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
