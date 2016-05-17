@@ -1,7 +1,6 @@
 ﻿using Data;
 using Data.Controllers;
 using HostApplication.Forms;
-using HostApplication.Helper;
 using HostApplication.Helpers;
 using System;
 using System.Activities;
@@ -20,7 +19,7 @@ using System.Windows.Forms;
 
 namespace HostApplication
 {
-    public partial class MainForm : Form
+    public partial class MainForm : Form, IInjectedForm
     {
         #region Fields & Properties
         
@@ -30,7 +29,7 @@ namespace HostApplication
         private CustomTrackingParticipant executionLog;
         private enum ExcutionMode { RunNewInstance, ResumePendingInstance, RunPendingInstance };
         private ExcutionMode executionMode;
-        private enum WFStatus { Started, Aborded, Completed };
+        private enum WFStatus { Created, Started, Aborded, Completed, None };
         private WFStatus wfStatus;
         public Dossier dossier { get; set; }
 
@@ -55,7 +54,7 @@ namespace HostApplication
             Activity mywf = GetActivityFromWorkflowRepository(wfRepoItem);
             if (mywf != null)
             {
-
+                wfStatus = WFStatus.Created;
                 this.DossierTextBox.Text = wfRepoItem.Name;
                 CREATE_dossier();
                 RUN(wfRepoItem, mywf, Guid.Parse("00000000-0000-0000-0000-000000000000"), dossier);
@@ -73,6 +72,7 @@ namespace HostApplication
                 Activity mywf = GetActivityFromWorkflowRepository(ag.Workflow);
                 if (mywf != null)
                 {
+                    wfStatus = WFStatus.Created;
                     dossier = ag.Dossier;
                     READ_dossier();
                     RUN(ag.Workflow, mywf, ag.WFInstanceId, dossier);
@@ -89,7 +89,7 @@ namespace HostApplication
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (wfStatus == WFStatus.Started) wfapp.Unload();
+            if (wfStatus == WFStatus.Started && wfapp != null) wfapp.Unload();
         }
 
         #endregion
@@ -183,10 +183,11 @@ namespace HostApplication
             return ag;
         }
 
-        private void RUN(WorkflowRepository wfRepositoryItem, Activity mywf, Guid wfInstanceID, Dossier dossier)
+        private void RUN(WorkflowRepository wfRepositoryItem, Activity mywf, Guid wfInstanceID, Dossier _dossier)
         {
             // Create a WorflowApplication
             wfapp = new WorkflowApplication(mywf);
+            injector = new InjectionController(this.panel1, wfapp);//, _dossier);
 
             //setup persistence
             SqlWorkflowInstanceStore store = new SqlWorkflowInstanceStore(@"data source=(LocalDB)\MSSQLLocalDB;attachdbfilename='C:\Users\uni1lab\OneDrive\Projects\Visual Studio 2013\UNI1 Mana\DBMana.mdf';integrated security=True;connect timeout=30;MultipleActiveResultSets=True;App=EntityFramework");
@@ -198,7 +199,7 @@ namespace HostApplication
             wfapp.InstanceStore = store;
 
             //Add Tracking Extension to WF. 
-            executionLog = new CustomTrackingParticipant(wfRepositoryItem, wfInstanceID, Environment.UserName, dossier);
+            executionLog = new CustomTrackingParticipant(wfRepositoryItem, wfInstanceID, Environment.UserName, _dossier);
             wfapp.Extensions.Add(executionLog);
 
             //Add ReferenceService Extension to WF to pass arguments to WF without using InArgument.
@@ -249,7 +250,7 @@ namespace HostApplication
         }
         private void WfExecutionAborted(WorkflowApplicationAbortedEventArgs e)
         {
-            wfStatus = WFStatus.Completed;
+            wfStatus = WFStatus.Aborded;
             UPDATE_dossier();
             timer1.Stop();
             Console.WriteLine("HostApplication (WfExecutionAborted) thread: " + System.Threading.Thread.CurrentThread.ManagedThreadId.ToString());
@@ -313,17 +314,12 @@ namespace HostApplication
         {
             if (dossier != null) dossier.Status = statut;
             _uc_MessageWithDelays = new HostApplication.UserControls.UC_MessageWithDelays(message, delay);
-            _uc_MessageWithDelays.Dock = System.Windows.Forms.DockStyle.Fill;
-            _uc_MessageWithDelays.Location = new System.Drawing.Point(0, 0);
-            _uc_MessageWithDelays.Name = "activity1";
-            _uc_MessageWithDelays.TabIndex = 0;
             _uc_MessageWithDelays.TimeOut += new System.EventHandler(this.RemoveUC_MessageWithDelays);
             this.panel1.Controls.Add(_uc_MessageWithDelays);
         }
 
         public void RemoveUC_MessageWithDelays(object sender, EventArgs e)
         {
-            //PersistWorkFlow();
             if (bookmarkInfo != null) wfapp.ResumeBookmark(bookmarkInfo.BookmarkName, "0");
             this.Statuslabel.Text = dossier.Status;
             panel1.Controls.Remove(_uc_MessageWithDelays);
@@ -376,10 +372,6 @@ namespace HostApplication
         {
             if (dossier != null) dossier.Status = statut;
             _uc_MessageYesNoButton = new HostApplication.UserControls.UC_MessageYesNoButton(message);
-            _uc_MessageYesNoButton.Dock = System.Windows.Forms.DockStyle.Fill;
-            _uc_MessageYesNoButton.Location = new System.Drawing.Point(0, 0);
-            _uc_MessageYesNoButton.Name = "activity1";
-            _uc_MessageYesNoButton.TabIndex = 0;
             _uc_MessageYesNoButton.Button1Click += new System.EventHandler(this.OnButtonYES);
             _uc_MessageYesNoButton.Button2Click += new System.EventHandler(this.OnButtonNO);
 
@@ -390,7 +382,6 @@ namespace HostApplication
         public void OnButtonNO(object sender, EventArgs e) { RemoveUC_MessageYesNoButton("NO"); }
         public void RemoveUC_MessageYesNoButton(string val)
         {
-            //PersistWorkFlow();
             if (bookmarkInfo != null) wfapp.ResumeBookmark(bookmarkInfo.BookmarkName, val);
             this.Statuslabel.Text = dossier.Status;
             panel1.Controls.Remove(_uc_MessageYesNoButton);
@@ -457,6 +448,21 @@ namespace HostApplication
             }
         }
         #endregion
+
+        private InjectionController injector;
+        void IInjectedForm.Inject(Type controlType, object[] activityParams)
+        {
+            if (dossier != null) dossier.Status = (String)activityParams[1];
+            injector.InjectControl(controlType, activityParams);
+        }
+
+
+        void IInjectedForm.Remove(object conrolReturnedValue)
+        {
+            this.Statuslabel.Text = dossier.Status;
+            injector.RemoveControl(this.bookmarkInfo, (string)conrolReturnedValue);
+        }
+
 
     }
 }

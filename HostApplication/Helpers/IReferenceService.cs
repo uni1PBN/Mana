@@ -3,7 +3,7 @@ namespace HostApplication.Helpers
 {
     public interface IReferenceService
     {
-        object GetMainFormReference();
-        void SetMainFormReference(object reference);
+        IInjectedForm GetInjectableFormReference();
+        void SetMainFormReference(IInjectedForm reference);
     }
 }

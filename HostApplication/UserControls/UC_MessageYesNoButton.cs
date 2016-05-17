@@ -25,6 +25,8 @@ namespace HostApplication.UserControls
         {
             InitializeComponent();
             this.label1.Text = message;
+            this.Dock = DockStyle.Fill;
+            this.Location = new System.Drawing.Point(0, 0);
         }
 
 

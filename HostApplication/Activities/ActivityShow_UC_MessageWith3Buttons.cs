@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HostApplication.Helpers;
+using System;
 using System.Activities;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -8,11 +9,12 @@ using System.Threading.Tasks;
 
 namespace HostApplication.Activities
 {
-    public class ActivityShow_UC_MessageWith2Buttons :  NativeActivity<String>
+    public class ActivityShow_UC_MessageWith3Buttons :  NativeActivity<String>
     {
         #region Fields & Properties
 
-        private HostApplication.MainForm _form;
+        //private HostApplication.Helpers.IInjectedForm mainForm;
+        //private HostApplication.MainForm mainForm;
 
         [Category("Arguments")]
         public InArgument<String> message { get; set; }
@@ -24,10 +26,10 @@ namespace HostApplication.Activities
 
         #region cTor
 
-        public ActivityShow_UC_MessageWith2Buttons()
+        public ActivityShow_UC_MessageWith3Buttons()
         {
             this.Result = new Microsoft.VisualBasic.Activities.VisualBasicReference<String>("temp");
-            Console.WriteLine("Activity  (Constructor)  thread: " + System.Threading.Thread.CurrentThread.ManagedThreadId.ToString());
+            Console.WriteLine("Activity Msg_3_Buttons  (Constructor)  thread: " + System.Threading.Thread.CurrentThread.ManagedThreadId.ToString());
         }
 
         #endregion
@@ -35,24 +37,34 @@ namespace HostApplication.Activities
 
         protected override void Execute(NativeActivityContext context)
         {
-            Console.WriteLine("Activity  (Execute " + context.GetValue(message) +")  thread: " + System.Threading.Thread.CurrentThread.ManagedThreadId.ToString());
+            Console.WriteLine("Activity Msg_3_Buttons  (Execute " + context.GetValue(message) + ")  thread: " + System.Threading.Thread.CurrentThread.ManagedThreadId.ToString());
             UCInjector(context);
             context.CreateBookmark("Bookmark", new BookmarkCallback(OnBookmarkCallback));
-            Console.WriteLine("Activity  (Execute " + context.GetValue(message) + ")  thread (after create bookmark): " + System.Threading.Thread.CurrentThread.ManagedThreadId.ToString());
+            Console.WriteLine("Activity Msg_3_Buttons  (Execute " + context.GetValue(message) + ")  thread (after create bookmark): " + System.Threading.Thread.CurrentThread.ManagedThreadId.ToString());
         }
 
         private void UCInjector(NativeActivityContext context)
         {
-            HostApplication.Helpers.IReferenceService myservice = context.GetExtension<HostApplication.Helpers.IReferenceService>();
-            _form = myservice.GetInjectableFormReference() as HostApplication.MainForm;
-            Console.WriteLine("Activity (UCInjector " + context.GetValue(message) + ")  thread : " + System.Threading.Thread.CurrentThread.ManagedThreadId.ToString());
-            if (_form.InvokeRequired)
+            IReferenceService myservice = context.GetExtension<IReferenceService>();
+            IInjectedForm mainForm = myservice.GetInjectableFormReference();
+            Console.WriteLine("Activity Msg_3_Buttons (UCInjector " + context.GetValue(message) + ")  thread : " + System.Threading.Thread.CurrentThread.ManagedThreadId.ToString());
+            if (mainForm.InvokeRequired)
             {
-                _form.Invoke(new Action(() => _form.InjectUC_MessageWith2Button(context.GetValue(message), context.GetValue(status))));
+                mainForm.Invoke(new Action(() => mainForm.Inject(typeof(UserControls.MessageWith3Button), new object[] 
+                { 
+                    mainForm, 
+                    context.GetValue(status), 
+                    context.GetValue(message) 
+                })), null);
             }
             else
             {
-                _form.InjectUC_MessageWith2Button(context.GetValue(message), context.GetValue(status));
+                mainForm.Inject(typeof(UserControls.MessageWith3Button), new object[] 
+                { 
+                    mainForm, 
+                    context.GetValue(status), 
+                    context.GetValue(message) 
+                });
             }
         }
 

@@ -35,7 +35,7 @@ namespace HostApplication.Activities
         protected override void Execute(NativeActivityContext context)
         {
             HostApplication.Helpers.IReferenceService myservice = context.GetExtension<HostApplication.Helpers.IReferenceService>();
-            _form = myservice.GetMainFormReference() as HostApplication.MainForm;
+            _form = myservice.GetInjectableFormReference() as HostApplication.MainForm;
 
             if (_form.InvokeRequired)
             {

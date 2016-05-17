@@ -120,10 +120,14 @@ namespace FlowDesigner
             ToolboxItemWrapper tool4 = new ToolboxItemWrapper("HostApplication.Activities.ActivityShow_UC_MessageWithDelays",
                 typeof(HostApplication.Activities.ActivityShow_UC_MessageWithDelays).Assembly.FullName, null, "Delayed Message");
 
+            ToolboxItemWrapper tool41 = new ToolboxItemWrapper("HostApplication.Activities.ActivityShow_UC_MessageWith3Buttons",
+                typeof(HostApplication.Activities.ActivityShow_UC_MessageWith3Buttons).Assembly.FullName, null, "Message 3B");
+
             // Add the Toolbox items to the categoryStatements.
             categoryBusinessActivities.Add(tool3);
             categoryBusinessActivities.Add(tool31);
             categoryBusinessActivities.Add(tool4);
+            categoryBusinessActivities.Add(tool41);
 
 
 

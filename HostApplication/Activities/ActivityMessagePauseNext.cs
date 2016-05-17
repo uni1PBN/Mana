@@ -35,15 +35,15 @@ namespace HostApplication.Activities
         protected override void Execute(NativeActivityContext context)
         {
             //HostApplication.Helpers.IReferenceService myservice = context.GetExtension<HostApplication.Helpers.IReferenceService>();
-            //_form = myservice.GetMainFormReference() as HostApplication.MainForm;
+            //mainForm = myservice.GetInjectableFormReference() as HostApplication.MainForm;
 
-            //if (_form.InvokeRequired)
+            //if (mainForm.InvokeRequired)
             //{
-            //    _form.Invoke(new Action(() => _form.InjectUC_MessagePauseNext(context.GetValue(message), context.GetValue(status))));
+            //    mainForm.Invoke(new Action(() => mainForm.InjectUC_MessagePauseNext(context.GetValue(message), context.GetValue(status))));
             //}
             //else
             //{
-            //    _form.InjectUC_MessagePauseNext(context.GetValue(message), context.GetValue(status));
+            //    mainForm.InjectUC_MessagePauseNext(context.GetValue(message), context.GetValue(status));
             //}
             //context.CreateBookmark("Bookmark", new BookmarkCallback(OnBookmarkCallback));
         }

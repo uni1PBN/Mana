@@ -8,10 +8,10 @@ namespace HostApplication.Helpers
 {
     public class ReferenceService : HostApplication.Helpers.IReferenceService
     {
-        private object _reference;
-        public void SetMainFormReference(Object reference)
+        private IInjectedForm _reference;
+        public void SetMainFormReference(IInjectedForm reference)
         { _reference = reference; }
-        public object GetMainFormReference()
+        public IInjectedForm GetInjectableFormReference()
         { return _reference ; }
     }
 }

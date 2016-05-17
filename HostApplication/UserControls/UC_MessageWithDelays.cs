@@ -17,7 +17,9 @@ namespace HostApplication.UserControls
         public String message { get; set; }
         public Int32 delay { get; set; }
 
-        public UC_MessageWithDelays() { }
+        public UC_MessageWithDelays() 
+        {
+        }
 
         public UC_MessageWithDelays(String message, Int32 delay)
         {
@@ -25,6 +27,8 @@ namespace HostApplication.UserControls
             this.label1.Text = message;
             this.delay = delay;
             this.digitalGauge2.Value = delay.ToString();
+            this.Dock = DockStyle.Fill;
+            this.Location = new System.Drawing.Point(0, 0);
             this.timer1.Start();
         }
 

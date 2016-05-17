@@ -8,7 +8,7 @@ using System.IO;
 using Data;
 using Data.Controllers;
 
-namespace HostApplication.Helper
+namespace HostApplication.Helpers
 {
     /// <summary>
     /// Workflow Tracking Participant - Custom Implementation
