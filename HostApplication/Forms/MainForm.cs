@@ -434,7 +434,7 @@ namespace HostApplication
             if (dossier != null)
             {
                 dossier.Name = this.DossierTextBox.Text;
-                dossier.Status = this.Statuslabel.Text;
+                //dossier.Status = this.Statuslabel.Text; =====> BECAUSE IT IS READ ONLY
                 (new DossierController()).UpdateItem(dossier);
             }
         }
@@ -456,13 +456,10 @@ namespace HostApplication
             injector.InjectControl(controlType, activityParams);
         }
 
-
         void IInjectedForm.Remove(object conrolReturnedValue)
         {
             this.Statuslabel.Text = dossier.Status;
             injector.RemoveControl(this.bookmarkInfo, (string)conrolReturnedValue);
         }
-
-
     }
 }
