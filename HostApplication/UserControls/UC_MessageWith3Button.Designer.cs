@@ -1,6 +1,7 @@
-﻿namespace HostApplication.UserControls
+﻿using System.Windows.Forms;
+namespace HostApplication.UserControls
 {
-    partial class MessageWith3Button : InjectableUC
+    partial class MessageWith3Button : UserControl
     {
         /// <summary> 
         /// Required designer variable.

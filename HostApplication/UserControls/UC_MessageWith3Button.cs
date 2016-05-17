@@ -1,17 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using HostApplication.Helpers;
 
 namespace HostApplication.UserControls
 {
-    public partial class MessageWith3Button
+    public partial class MessageWith3Button : UserControl
     {
         private IInjectedForm _form;
         public MessageWith3Button()

@@ -68,6 +68,7 @@ namespace HostApplication.Activities
             }
         }
 
+
         #region Bookmarks
 
         protected override bool CanInduceIdle

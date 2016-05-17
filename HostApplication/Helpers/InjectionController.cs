@@ -1,20 +1,18 @@
-﻿using HostApplication.UserControls;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
+using System.Activities;
+using System.Activities.Hosting;
+using System.Windows.Forms;
 
 namespace HostApplication.Helpers
 {
     public class InjectionController
     {
-        public InjectableUC control { get; set; }
+        public Control control { get; set; }
 
-        private System.Windows.Forms.Panel container; 
-        private System.Activities.WorkflowApplication wfAppli; 
+        private Panel container; 
+        private WorkflowApplication wfAppli; 
 
-        public InjectionController(System.Windows.Forms.Panel container, System.Activities.WorkflowApplication wfapp)
+        public InjectionController(Panel container, WorkflowApplication wfapp)
         {
             this.container = container;
             this.wfAppli = wfapp;
@@ -24,12 +22,12 @@ namespace HostApplication.Helpers
         {
             if (container != null && controlType != null)
             {
-                this.control = (InjectableUC)Activator.CreateInstance(controlType, new object[] { activityParams });
+                this.control = (Control)Activator.CreateInstance(controlType, new object[] { activityParams });
                 container.Controls.Add(control);
             }
         }
 
-        public void RemoveControl(System.Activities.Hosting.BookmarkInfo bookmarkinfo, object conrolReturnedValue)
+        public void RemoveControl(BookmarkInfo bookmarkinfo, object conrolReturnedValue)
         {
             if (wfAppli != null && bookmarkinfo != null) wfAppli.ResumeBookmark(bookmarkinfo.BookmarkName, conrolReturnedValue);
             container.Controls.Remove(control);

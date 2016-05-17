@@ -95,9 +95,6 @@
     <Compile Include="Helpers\InjectionController.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="UserControls\InjectableUC.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
     <Compile Include="UserControls\UC_MessageWith3Button.cs">
       <SubType>UserControl</SubType>
     </Compile>
