@@ -22,7 +22,7 @@ namespace HostApplication
     public partial class MainForm : Form, IInjectedForm
     {
         #region Fields & Properties
-        
+
         private System.Threading.AutoResetEvent instanceUnloaded = new System.Threading.AutoResetEvent(false);
         private BookmarkInfo bookmarkInfo;
         private WorkflowApplication wfapp;
@@ -36,7 +36,7 @@ namespace HostApplication
         #endregion
 
         #region cTor
-        
+
         public MainForm()
         {
             InitializeComponent();
@@ -45,7 +45,7 @@ namespace HostApplication
         #endregion
 
         #region Menu BUSINESS PROCESS
-        
+
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.Statuslabel.Text = "-------------------";
@@ -95,7 +95,7 @@ namespace HostApplication
         #endregion
 
         #region WF Methods
-        
+
         private Activity GetActivityFromWorkflowFile()
         {
             Activity mywf = null;
@@ -292,7 +292,7 @@ namespace HostApplication
         #endregion
 
         #region WF Tracking Timer
-        
+
         private void TimerUpdatingTracking(object sender, EventArgs e)
         {
             if (executionMode == ExcutionMode.ResumePendingInstance)
@@ -303,91 +303,6 @@ namespace HostApplication
             this.LogtextBox.Text = executionLog.Console;
         }
 
-        #endregion
-
-        #region UserControled Activities
-
-        #region MessageWithDelays
-
-        HostApplication.UserControls.UC_MessageWithDelays _uc_MessageWithDelays;
-        public void InjectUC_MessageWithDelays(string message, Int32 delay, string statut)
-        {
-            if (dossier != null) dossier.Status = statut;
-            _uc_MessageWithDelays = new HostApplication.UserControls.UC_MessageWithDelays(message, delay);
-            _uc_MessageWithDelays.TimeOut += new System.EventHandler(this.RemoveUC_MessageWithDelays);
-            this.panel1.Controls.Add(_uc_MessageWithDelays);
-        }
-
-        public void RemoveUC_MessageWithDelays(object sender, EventArgs e)
-        {
-            if (bookmarkInfo != null) wfapp.ResumeBookmark(bookmarkInfo.BookmarkName, "0");
-            this.Statuslabel.Text = dossier.Status;
-            panel1.Controls.Remove(_uc_MessageWithDelays);
-        }
-
-        #endregion
-
-        #region MessageWith2Button
-
-        HostApplication.UserControls.UC_MessageWith2Button _uc_MessageWith2Button;
-        public void InjectUC_MessageWith2Button(string message, string statut)
-        {
-            IMPORT_dossier(statut);
-            _uc_MessageWith2Button = new HostApplication.UserControls.UC_MessageWith2Button(message);
-            _uc_MessageWith2Button.Dock = System.Windows.Forms.DockStyle.Fill;
-            _uc_MessageWith2Button.Location = new System.Drawing.Point(0, 0);
-            _uc_MessageWith2Button.Name = "activity1";
-            _uc_MessageWith2Button.TabIndex = 0;
-            _uc_MessageWith2Button.Button1Click += new System.EventHandler(this.OnButton1);
-            _uc_MessageWith2Button.Button2Click += new System.EventHandler(this.OnButton2);
-
-            this.panel1.Controls.Add(_uc_MessageWith2Button);
-            Console.WriteLine("HostApplication (InjectUC_MessageWith2Button) thread: " + System.Threading.Thread.CurrentThread.ManagedThreadId.ToString());
-        }
-
-        public void OnButton1(object sender, EventArgs e)
-        {
-            if (MessageBox.Show("Are you sure to abort this process ?", "Abort Business Process", MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes)
-            {
-                wfapp.Abort("Aborted by user");
-                panel1.Controls.Remove(_uc_MessageWith2Button);
-            }
-            Console.WriteLine("HostApplication (OnButton1 - UC_MessageWith2Button) thread: " + System.Threading.Thread.CurrentThread.ManagedThreadId.ToString());
-        }
-        public void OnButton2(object sender, EventArgs e) { RemoveUC_MessageWith2Button("2"); }
-        public void RemoveUC_MessageWith2Button(string val)
-        {
-            if (bookmarkInfo != null) wfapp.ResumeBookmark(bookmarkInfo.BookmarkName, val);
-            this.Statuslabel.Text = dossier.Status;
-            panel1.Controls.Remove(_uc_MessageWith2Button);
-            Console.WriteLine("HostApplication (RemoveUC_MessageWith2Button) thread: " + System.Threading.Thread.CurrentThread.ManagedThreadId.ToString());
-        }
-
-        #endregion
-
-        #region MessageYesNo
-
-        HostApplication.UserControls.UC_MessageYesNoButton _uc_MessageYesNoButton;
-        public void InjectUC_MessageYesNoButton(string message, string statut)
-        {
-            if (dossier != null) dossier.Status = statut;
-            _uc_MessageYesNoButton = new HostApplication.UserControls.UC_MessageYesNoButton(message);
-            _uc_MessageYesNoButton.Button1Click += new System.EventHandler(this.OnButtonYES);
-            _uc_MessageYesNoButton.Button2Click += new System.EventHandler(this.OnButtonNO);
-
-            this.panel1.Controls.Add(_uc_MessageYesNoButton);
-        }
-
-        public void OnButtonYES(object sender, EventArgs e) { RemoveUC_MessageYesNoButton("YES"); }
-        public void OnButtonNO(object sender, EventArgs e) { RemoveUC_MessageYesNoButton("NO"); }
-        public void RemoveUC_MessageYesNoButton(string val)
-        {
-            if (bookmarkInfo != null) wfapp.ResumeBookmark(bookmarkInfo.BookmarkName, val);
-            this.Statuslabel.Text = dossier.Status;
-            panel1.Controls.Remove(_uc_MessageYesNoButton);
-        }
-        #endregion
-        
         #endregion
 
         #region Menu TOOLS
@@ -449,17 +364,117 @@ namespace HostApplication
         }
         #endregion
 
+        #region Injection UserControls
+
         private InjectionController injector;
+
         void IInjectedForm.Inject(Type controlType, object[] activityParams)
         {
             if (dossier != null) dossier.Status = (String)activityParams[1];
             injector.InjectControl(controlType, activityParams);
         }
 
-        void IInjectedForm.Remove(object conrolReturnedValue)
+        void IInjectedForm.Remove(object controlReturnedValue)
         {
             this.Statuslabel.Text = dossier.Status;
-            injector.RemoveControl(this.bookmarkInfo, (string)conrolReturnedValue);
+            if ((String)controlReturnedValue == "ABORT")
+            {
+                if (MessageBox.Show("Are you sure to abort this process ?", "Abort Business Process", MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes)
+                {
+                    wfapp.Abort("Aborted by user");
+                }
+            }
+            injector.RemoveControl(this.bookmarkInfo, (string)controlReturnedValue);
         }
+
+        #endregion
     }
 }
+
+
+
+
+//#region UserControled Activities
+
+//#region MessageWithDelays
+
+//HostApplication.UserControls.UC_MessageWithDelays _uc_MessageWithDelays;
+//public void InjectUC_MessageWithDelays(string message, Int32 delay, string statut)
+//{
+//    if (dossier != null) dossier.Status = statut;
+//    _uc_MessageWithDelays = new HostApplication.UserControls.UC_MessageWithDelays(message, delay);
+//    _uc_MessageWithDelays.TimeOut += new System.EventHandler(this.RemoveUC_MessageWithDelays);
+//    this.panel1.Controls.Add(_uc_MessageWithDelays);
+//}
+
+//public void RemoveUC_MessageWithDelays(object sender, EventArgs e)
+//{
+//    if (bookmarkInfo != null) wfapp.ResumeBookmark(bookmarkInfo.BookmarkName, "0");
+//    this.Statuslabel.Text = dossier.Status;
+//    panel1.Controls.Remove(_uc_MessageWithDelays);
+//}
+
+//#endregion
+
+//#region MessageWith2Button
+
+//HostApplication.UserControls.UC_MessageWith2Button _uc_MessageWith2Button;
+//public void InjectUC_MessageWith2Button(string message, string statut)
+//{
+//    IMPORT_dossier(statut);
+//    _uc_MessageWith2Button = new HostApplication.UserControls.UC_MessageWith2Button(message);
+//    _uc_MessageWith2Button.Dock = System.Windows.Forms.DockStyle.Fill;
+//    _uc_MessageWith2Button.Location = new System.Drawing.Point(0, 0);
+//    _uc_MessageWith2Button.Name = "activity1";
+//    _uc_MessageWith2Button.TabIndex = 0;
+//    _uc_MessageWith2Button.Button1Click += new System.EventHandler(this.OnButton1);
+//    _uc_MessageWith2Button.Button2Click += new System.EventHandler(this.OnButton2);
+
+//    this.panel1.Controls.Add(_uc_MessageWith2Button);
+//    Console.WriteLine("HostApplication (InjectUC_MessageWith2Button) thread: " + System.Threading.Thread.CurrentThread.ManagedThreadId.ToString());
+//}
+
+//public void OnButton1(object sender, EventArgs e)
+//{
+//    if (MessageBox.Show("Are you sure to abort this process ?", "Abort Business Process", MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes)
+//    {
+//        wfapp.Abort("Aborted by user");
+//        panel1.Controls.Remove(_uc_MessageWith2Button);
+//    }
+//    Console.WriteLine("HostApplication (OnButton1 - UC_MessageWith2Button) thread: " + System.Threading.Thread.CurrentThread.ManagedThreadId.ToString());
+//}
+//public void OnButton2(object sender, EventArgs e) { RemoveUC_MessageWith2Button("2"); }
+//public void RemoveUC_MessageWith2Button(string val)
+//{
+//    if (bookmarkInfo != null) wfapp.ResumeBookmark(bookmarkInfo.BookmarkName, val);
+//    this.Statuslabel.Text = dossier.Status;
+//    panel1.Controls.Remove(_uc_MessageWith2Button);
+//    Console.WriteLine("HostApplication (RemoveUC_MessageWith2Button) thread: " + System.Threading.Thread.CurrentThread.ManagedThreadId.ToString());
+//}
+
+//#endregion
+
+//#region MessageYesNo
+
+//HostApplication.UserControls.UC_MessageYesNoButton _uc_MessageYesNoButton;
+//public void InjectUC_MessageYesNoButton(string message, string statut)
+//{
+//    if (dossier != null) dossier.Status = statut;
+//    _uc_MessageYesNoButton = new HostApplication.UserControls.UC_MessageYesNoButton(message);
+//    _uc_MessageYesNoButton.Button1Click += new System.EventHandler(this.OnButtonYES);
+//    _uc_MessageYesNoButton.Button2Click += new System.EventHandler(this.OnButtonNO);
+
+//    this.panel1.Controls.Add(_uc_MessageYesNoButton);
+//}
+
+//public void OnButtonYES(object sender, EventArgs e) { RemoveUC_MessageYesNoButton("YES"); }
+//public void OnButtonNO(object sender, EventArgs e) { RemoveUC_MessageYesNoButton("NO"); }
+//public void RemoveUC_MessageYesNoButton(string val)
+//{
+//    if (bookmarkInfo != null) wfapp.ResumeBookmark(bookmarkInfo.BookmarkName, val);
+//    this.Statuslabel.Text = dossier.Status;
+//    panel1.Controls.Remove(_uc_MessageYesNoButton);
+//}
+//#endregion
+
+//#endregion

@@ -7,24 +7,31 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using HostApplication.Helpers;
 
 namespace HostApplication.UserControls
 {
     public partial class UC_MessageYesNoButton : UserControl
     {
-        public event EventHandler Button1Click;
-        public event EventHandler Button2Click;
+        //public event EventHandler Button1Click;
+        ////public event EventHandler Button2Click;
 
-        public String message { get; set; }
-        public String Button1Text { get; set; }
-        public String Button2Text { get; set; }
-
-        public UC_MessageYesNoButton() { }
-
-        public UC_MessageYesNoButton(String message)
+        //public String message { get; set; }
+        //public String Button1Text { get; set; }
+        //public String Button2Text { get; set; }
+        private IInjectedForm _form;
+        public UC_MessageYesNoButton()
         {
             InitializeComponent();
-            this.label1.Text = message;
+            this.Dock = DockStyle.Fill;
+            this.Location = new System.Drawing.Point(0, 0);
+        }
+
+        public UC_MessageYesNoButton(object[] cTorParams)
+        {
+            InitializeComponent();
+            this._form = (IInjectedForm)cTorParams[0];
+            this.label1.Text = (String) cTorParams[2];
             this.Dock = DockStyle.Fill;
             this.Location = new System.Drawing.Point(0, 0);
         }
@@ -32,14 +39,12 @@ namespace HostApplication.UserControls
 
         private void button1_Click_1(object sender, EventArgs e)
         {
-            if (this.Button1Click != null)
-                this.Button1Click(this, e);
+            _form.Remove("YES");
         }
 
         private void button2_Click_1(object sender, EventArgs e)
         {
-            if (this.Button2Click != null)
-                this.Button2Click(this, e);
+            _form.Remove("NO");
         }
     }
 }

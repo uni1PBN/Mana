@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HostApplication.Helpers;
+using System;
 using System.Activities;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -14,7 +15,7 @@ namespace HostApplication.Activities
 
         #region Fields & Properties
 
-        private HostApplication.MainForm _form;
+        //private HostApplication.MainForm _form;
 
         [Category("Arguments")]
         public InArgument<String> message { get; set; }
@@ -31,6 +32,7 @@ namespace HostApplication.Activities
         public ActivityShow_UC_MessageWithDelays()
         {
             this.Result = new Microsoft.VisualBasic.Activities.VisualBasicReference<String>("temp");
+            Console.WriteLine("Activity Delay  (Constructor)  thread: " + System.Threading.Thread.CurrentThread.ManagedThreadId.ToString());
         }
 
         #endregion
@@ -38,17 +40,38 @@ namespace HostApplication.Activities
 
         protected override void Execute(NativeActivityContext context)
         {
-            HostApplication.Helpers.IReferenceService myservice = context.GetExtension<HostApplication.Helpers.IReferenceService>();
-            _form = myservice.GetInjectableFormReference() as HostApplication.MainForm;
-            if (_form.InvokeRequired)
+            Console.WriteLine("Activity Delay  (Execute " + context.GetValue(message) + ")  thread: " + System.Threading.Thread.CurrentThread.ManagedThreadId.ToString());
+
+            UCInjector(context);
+
+            //Bookmark
+            context.CreateBookmark("Bookmark", new BookmarkCallback(OnBookmarkCallback));
+            Console.WriteLine("Activity Dalay  (Execute " + context.GetValue(message) + ")  thread (after create bookmark): " + System.Threading.Thread.CurrentThread.ManagedThreadId.ToString());
+        }
+
+        private void UCInjector(NativeActivityContext context)
+        {
+            IReferenceService myservice = context.GetExtension<IReferenceService>();
+            IInjectedForm mainForm = myservice.GetInjectableFormReference();
+            Console.WriteLine("Activity Delay (UCInjector " + context.GetValue(message) + ")  thread : " + System.Threading.Thread.CurrentThread.ManagedThreadId.ToString());
+            if (mainForm.InvokeRequired)
             {
-                _form.Invoke(new Action(() => _form.InjectUC_MessageWithDelays(context.GetValue(message), context.GetValue(delay), context.GetValue(status))));
+                mainForm.Invoke(new Action(() => mainForm.Inject(typeof(UserControls.UC_MessageWithDelays), new object[] 
+                { 
+                    mainForm, 
+                    context.GetValue(status), 
+                    context.GetValue(message) 
+                })), null);
             }
             else
             {
-                _form.InjectUC_MessageWithDelays(context.GetValue(message), context.GetValue(delay), context.GetValue(status));
+                mainForm.Inject(typeof(UserControls.UC_MessageWithDelays), new object[] 
+                { 
+                    mainForm, 
+                    context.GetValue(status), 
+                    context.GetValue(message) 
+                });
             }
-            context.CreateBookmark("Bookmark", new BookmarkCallback(OnBookmarkCallback));
         }
 
 
@@ -64,7 +87,14 @@ namespace HostApplication.Activities
 
         private void OnBookmarkCallback(NativeActivityContext context, Bookmark bookmark, object val)
         {
-            this.Result.Set(context, (string)val);
+            Console.WriteLine("Activity  (OnBookmarkCallback)  thread: " + System.Threading.Thread.CurrentThread.ManagedThreadId.ToString() + " Bookmark Callback - val=" + (string)val);
+            if ((String)val == "RESUMED")
+            {
+                UCInjector(context);
+                context.CreateBookmark("Bookmark", new BookmarkCallback(OnBookmarkCallback));
+                Console.WriteLine("Activity  (OnBookmarkCallback " + context.GetValue(message) + ")  thread (after create bookmark): " + System.Threading.Thread.CurrentThread.ManagedThreadId.ToString());
+            }
+            this.Result.Set(context, (String)val);
         }
 
         #endregion

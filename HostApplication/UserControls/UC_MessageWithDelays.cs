@@ -7,28 +7,34 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using HostApplication.Helpers;
 
 namespace HostApplication.UserControls
 {
     public partial class UC_MessageWithDelays : UserControl
     {
-        public event EventHandler TimeOut;
+        //public event EventHandler TimeOut;
 
-        public String message { get; set; }
+        //public String message { get; set; }
         public Int32 delay { get; set; }
 
+        private IInjectedForm _form;
         public UC_MessageWithDelays() 
         {
-        }
-
-        public UC_MessageWithDelays(String message, Int32 delay)
-        {
             InitializeComponent();
-            this.label1.Text = message;
-            this.delay = delay;
-            this.digitalGauge2.Value = delay.ToString();
             this.Dock = DockStyle.Fill;
             this.Location = new System.Drawing.Point(0, 0);
+        }
+
+        public UC_MessageWithDelays(object[] cTorParams)
+        {
+            InitializeComponent();
+            this._form = (IInjectedForm)cTorParams[0];
+            this.delay = (Int32)cTorParams[1];
+            this.label1.Text = (String)cTorParams[2];
+            this.Dock = DockStyle.Fill;
+            this.Location = new System.Drawing.Point(0, 0);
+            this.digitalGauge2.Value = delay.ToString();
             this.timer1.Start();
         }
 
@@ -39,8 +45,9 @@ namespace HostApplication.UserControls
             if (delay < 0)
             {
                 timer1.Stop();
-                if (this.TimeOut != null)
-                    this.TimeOut(this, e);
+                _form.Remove("NEXT");
+                //if (this.TimeOut != null)
+                //    this.TimeOut(this, e);
             }
         }
     }

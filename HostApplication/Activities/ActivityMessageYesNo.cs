@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HostApplication.Helpers;
+using System;
 using System.Activities;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -12,7 +13,7 @@ namespace HostApplication.Activities
     {
         #region Fields & Properties
 
-        private HostApplication.MainForm _form;
+        //private HostApplication.MainForm _form;
 
         [Category("Arguments")]
         public InArgument<String> message { get; set; }
@@ -34,19 +35,53 @@ namespace HostApplication.Activities
 
         protected override void Execute(NativeActivityContext context)
         {
-            HostApplication.Helpers.IReferenceService myservice = context.GetExtension<HostApplication.Helpers.IReferenceService>();
-            _form = myservice.GetInjectableFormReference() as HostApplication.MainForm;
+            Console.WriteLine("Activity MessageYesNo  (Execute " + context.GetValue(message) + ")  thread: " + System.Threading.Thread.CurrentThread.ManagedThreadId.ToString());
 
-            if (_form.InvokeRequired)
+            UCInjector(context);
+
+            //Bookmark
+            context.CreateBookmark("Bookmark", new BookmarkCallback(OnBookmarkCallback));
+            Console.WriteLine("Activity MessageYesNo  (Execute " + context.GetValue(message) + ")  thread (after create bookmark): " + System.Threading.Thread.CurrentThread.ManagedThreadId.ToString());
+        }
+        //{
+        //    HostApplication.Helpers.IReferenceService myservice = context.GetExtension<HostApplication.Helpers.IReferenceService>();
+        //    _form = myservice.GetInjectableFormReference() as HostApplication.MainForm;
+
+        //    if (_form.InvokeRequired)
+        //    {
+        //        _form.Invoke(new Action(() => _form.InjectUC_MessageYesNoButton(context.GetValue(message), context.GetValue(status))));
+        //    }
+        //    else
+        //    {
+        //        _form.InjectUC_MessageYesNoButton(context.GetValue(message), context.GetValue(status));
+        //    }
+        //    context.CreateBookmark("Bookmark", new BookmarkCallback(OnBookmarkCallback));
+
+        //}
+
+        private void UCInjector(NativeActivityContext context)
+        {
+            IReferenceService myservice = context.GetExtension<IReferenceService>();
+            IInjectedForm mainForm = myservice.GetInjectableFormReference();
+            Console.WriteLine("Activity Msg_3_Buttons (UCInjector " + context.GetValue(message) + ")  thread : " + System.Threading.Thread.CurrentThread.ManagedThreadId.ToString());
+            if (mainForm.InvokeRequired)
             {
-                _form.Invoke(new Action(() => _form.InjectUC_MessageYesNoButton(context.GetValue(message), context.GetValue(status))));
+                mainForm.Invoke(new Action(() => mainForm.Inject(typeof(UserControls.UC_MessageYesNoButton), new object[] 
+                { 
+                    mainForm, 
+                    context.GetValue(status), 
+                    context.GetValue(message) 
+                })), null);
             }
             else
             {
-                _form.InjectUC_MessageYesNoButton(context.GetValue(message), context.GetValue(status));
+                mainForm.Inject(typeof(UserControls.UC_MessageYesNoButton), new object[] 
+                { 
+                    mainForm, 
+                    context.GetValue(status), 
+                    context.GetValue(message) 
+                });
             }
-            context.CreateBookmark("Bookmark", new BookmarkCallback(OnBookmarkCallback));
-
         }
 
 
@@ -62,6 +97,13 @@ namespace HostApplication.Activities
 
         private void OnBookmarkCallback(NativeActivityContext context, Bookmark bookmark, object val)
         {
+            Console.WriteLine("Activity  (OnBookmarkCallback)  thread: " + System.Threading.Thread.CurrentThread.ManagedThreadId.ToString() + " Bookmark Callback - val=" + (string)val);
+            if ((String)val == "RESUMED")
+            {
+                UCInjector(context);
+                context.CreateBookmark("Bookmark", new BookmarkCallback(OnBookmarkCallback));
+                Console.WriteLine("Activity  (OnBookmarkCallback " + context.GetValue(message) + ")  thread (after create bookmark): " + System.Threading.Thread.CurrentThread.ManagedThreadId.ToString());
+            }
             this.Result.Set(context, (String)val);
         }
 

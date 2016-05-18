@@ -65,9 +65,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Activities\ActivityMessageYesNo.cs" />
-    <Compile Include="Activities\ActivityMessagePauseNext.cs" />
     <Compile Include="Activities\ActivityShow_UC_MessageWith3Buttons.cs" />
-    <Compile Include="Activities\ActivityShow_UC_MessageWith2Buttons_OLD.cs" />
     <Compile Include="Activities\ActivityShow_UC_MessageWith2Buttons.cs" />
     <Compile Include="Activities\ActivityShow_UC_MessageWithDelays.cs" />
     <Compile Include="Forms\AgendaForm.cs">

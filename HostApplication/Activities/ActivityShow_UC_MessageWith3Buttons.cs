@@ -13,9 +13,6 @@ namespace HostApplication.Activities
     {
         #region Fields & Properties
 
-        //private HostApplication.Helpers.IInjectedForm mainForm;
-        //private HostApplication.MainForm mainForm;
-
         [Category("Arguments")]
         public InArgument<String> message { get; set; }
         [Category("Arguments")]
@@ -38,7 +35,10 @@ namespace HostApplication.Activities
         protected override void Execute(NativeActivityContext context)
         {
             Console.WriteLine("Activity Msg_3_Buttons  (Execute " + context.GetValue(message) + ")  thread: " + System.Threading.Thread.CurrentThread.ManagedThreadId.ToString());
+            
             UCInjector(context);
+
+            //Bookmark
             context.CreateBookmark("Bookmark", new BookmarkCallback(OnBookmarkCallback));
             Console.WriteLine("Activity Msg_3_Buttons  (Execute " + context.GetValue(message) + ")  thread (after create bookmark): " + System.Threading.Thread.CurrentThread.ManagedThreadId.ToString());
         }
